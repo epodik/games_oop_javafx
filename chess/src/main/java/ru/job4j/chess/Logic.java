@@ -4,10 +4,9 @@ import ru.job4j.chess.firuges.Cell;
 import ru.job4j.chess.firuges.Figure;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
- * //TODO add comments.
+ * //Logic for Figures
  *
  * @author Petr Arsentev (parsentev@yandex.ru)
  * @version $Id$
@@ -21,20 +20,24 @@ public class Logic {
         this.figures[this.index++] = figure;
     }
 
+    public boolean freeCells(Cell[] steps) {
+        boolean rst = true;
+        for (Cell i:steps) {
+            if (this.findBy(i) != -1) {
+                rst = false;
+                break;
+            }
+        }
+        return rst;
+    }
+
     public boolean move(Cell source, Cell dest) {
         boolean rst = false;
         int index = this.findBy(source);
         int indexdest = this.findBy(dest);
         if (index != -1 && indexdest == -1) {
             Cell[] steps = this.figures[index].way(source, dest);
-            boolean free = true;
-            for (Cell i:steps) {
-                if (this.findBy(i) != -1) {
-                    free = false;
-                    break;
-                }
-            }
-            if (free && steps.length > 0 && steps[steps.length - 1].equals(dest)) {
+            if (freeCells(steps) && steps.length > 0 && steps[steps.length - 1].equals(dest)) {
                 rst = true;
                 this.figures[index] = this.figures[index].copy(dest);
             }
